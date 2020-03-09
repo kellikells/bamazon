@@ -19,7 +19,7 @@ CREATE TABLE products(
     PRIMARY KEY (item_id)
 );
 
--- inserting data into products table --
+-- inserting data into produce table --
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Betrayal At House On The Hill", "cooperative games", 39.49, 3), 
 ("Pandemic", "cooperative games", 40.00, 5),
@@ -30,4 +30,4 @@ VALUES ("Betrayal At House On The Hill", "cooperative games", 39.49, 3),
 ("Taboo", "party games", 15.00, 7),
 ("Jenga", "party games", 15.95, 10),
 ("5 Second Rule", "party games", 19.99, 15),
-("Sudoku", "puzzles", 4.99, 30)
+("Sudoku", "puzzles", 4.99, 30); 

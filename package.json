@@ -1,0 +1,25 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "(aka babyamazon)",
+  "main": "bamazonRead.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kellikells/bamazon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kellikells/bamazon/issues"
+  },
+  "homepage": "https://github.com/kellikells/bamazon#readme",
+  "dependencies": {
+    "inquirer": "^7.0.6",
+    "mysql": "^2.18.1",
+    "sql-formatter": "^2.3.3"
+  }
+}

@@ -33,12 +33,33 @@ function productDisplay() {
 
         // --- loop through response & logs desired 
         for (let i = 0; i < res.length; i++) {
-            console.log(`id: ${res[i].item_id} | product name: ${res[i].product_name} | price: $ ${res[i].price}`);     //FORMAT(price, 2)
+            console.log(`ID: ${res[i].item_id} | product name: ${res[i].product_name} | price: $ ${res[i].price}`);     //FORMAT(price, 2)
         }
-        connection.end();  
+        connection.end();
+        start();
     });
 }
 
+// ======= Prompt
+function start() {
+    inquirer
+        .prompt([
+            {
+                name: "itemId",
+                type: "number",
+                message: "Enter the product ID you hope to buy: "
+            },
+            {
+                name: "quantity",
+                type: "number",
+                message: "How many units: "
+            }
+        ])
+        .then(function (answer) {
+            console.log(`item_id: ${answer.itemId}`);
+            console.log(`quantity: ${answer.quantity}`);
+        });
 
 
+}
 

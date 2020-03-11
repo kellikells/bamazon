@@ -35,8 +35,10 @@ function productDisplay() {
         for (let i = 0; i < res.length; i++) {
             console.log(`ID: ${res[i].item_id} | product name: ${res[i].product_name} | price: $ ${res[i].price}`);     //FORMAT(price, 2)
         }
-        connection.end();
+
         start();
+        // connection.end();
+
     });
 }
 
@@ -45,21 +47,32 @@ function start() {
     inquirer
         .prompt([
             {
-                name: "itemId",
-                type: "number",
-                message: "Enter the product ID you hope to buy: "
+                name: 'itemId',
+                type: 'number',
+                message: 'Enter the product ID you hope to buy: '
             },
             {
-                name: "quantity",
-                type: "number",
-                message: "How many units: "
+                name: 'quantity',
+                type: 'number',
+                message: 'How many units: '
             }
         ])
         .then(function (answer) {
-            console.log(`item_id: ${answer.itemId}`);
-            console.log(`quantity: ${answer.quantity}`);
-        });
+         
+            let selectedId = answer.itemId;
+            let selectedQuantity = answer.quantity;
 
+
+            connection.query('SELECT * FROM products WHERE item_id=?', selectedId, function(err,res){
+                if (err) throw err;
+
+                // console.log(`${res[0].stock_quantity}`);
+
+            })
+
+            // compare customer's quantity to stock quantity
+            
+        });
 
 }
 

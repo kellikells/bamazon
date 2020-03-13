@@ -1,4 +1,4 @@
-// requiring packages
+// --- requiring packages
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 
@@ -34,15 +34,17 @@ function productDisplay() {
         // --- loop through response & logs desired 
         for (let i = 0; i < res.length; i++) {
             console.log(`ID: ${res[i].item_id} | product name: ${res[i].product_name} | price: $ ${res[i].price}`);     //FORMAT(price, 2)
+
+            // create a GLOBAL VARIABLE to hold [] array to store all the data (). so don't need to query until updating/etc.
+            // use a for loop to push the data int othe array
+
         }
-
         start();
-        // connection.end();
-
     });
 }
 
-// ======= Prompt
+// =============== Prompt ===============
+// --------------------------------------
 function start() {
     inquirer
         .prompt([
@@ -58,21 +60,31 @@ function start() {
             }
         ])
         .then(function (answer) {
-         
-            let selectedId = answer.itemId;
-            let selectedQuantity = answer.quantity;
 
+            // --- variables storing: USER INPUT
+            var selectedId = answer.itemId;
+            var selectedQuantity = answer.quantity;
 
-            connection.query('SELECT * FROM products WHERE item_id=?', selectedId, function(err,res){
-                if (err) throw err;
+            connection.query('SELECT price FROM products WHERE item_id=? AND stock_quantity> ?', [selectedId, selectedQuantity],
 
-                // console.log(`${res[0].stock_quantity}`);
+                function (err, res) {
+                    if (err) throw err;
+                  
+                    //  not enough stock for user request
+                    if (res.length===0) {
+                        console.log(`Sorry, insufficient quantity`);
+                        start();
 
-            })
+                    }
 
-            // compare customer's quantity to stock quantity
-            
+                    // {
+                    //  console.log(`selectedId.price * selectedQuantity);
+                    // }
+
+                    // FUNCTION 
+                    //TO UPDATE DB: ITEM QUANTITY
+                    //LOG: CUSTOMER TOTAL
+                });
         });
-
 }
 

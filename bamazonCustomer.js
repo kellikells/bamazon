@@ -19,7 +19,7 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
     if (err) throw err;
 
-    // thread ID: can be used to kill the thread or if connection is lost, to reconnect
+    // --- thread ID: can be used to kill the thread or if connection is lost, to reconnect
     console.log('Connected as thread ID: ' + connection.threadId);
     productDisplay();
 });
@@ -30,20 +30,16 @@ function productDisplay() {
     connection.query('SELECT * FROM products', (err, res) => {
         if (err) throw err;
 
-        // --- loop through response & logs desired 
+        // --- loop through response & logs specific data
         for (let i = 0; i < res.length; i++) {
-            console.log(`ID: ${res[i].item_id} | product name: ${res[i].product_name} | price: $ ${res[i].price}`);     //FORMAT(price, 2)
-
-            // create a GLOBAL VARIABLE to hold [] array to store all the data (). so don't need to query until updating/etc.
-            // use a for loop to push the data int othe array
-
+            console.log(`ID: ${res[i].item_id} | product name: ${res[i].product_name} | price: $ ${res[i].price}`); 
         }
         start();
     });
 }
 
-// =============== Prompt ===============
-// --------------------------------------
+// ======================= Prompt ===========================
+// ----------------------------------------------------------
 function start() {
     inquirer
         .prompt([
@@ -64,6 +60,7 @@ function start() {
             var selectedId = answer.itemId;
             var selectedQuantity = answer.quantity;
 
+            // --- searches DB for user's specific item & quantity --- returns: price
             connection.query('SELECT price FROM products WHERE item_id=? AND stock_quantity> ?', [selectedId, selectedQuantity],
 
                 function (err, res) {

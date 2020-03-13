@@ -2,7 +2,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 
-
 // ========= Sets up the ability to connect to DB ==========
 //     put into our client(node), how to connect to DB
 // ----------------------------------------------------------
@@ -69,21 +68,21 @@ function start() {
 
                 function (err, res) {
                     if (err) throw err;
-                  
+
                     //  not enough stock for user request
-                    if (res.length===0) {
+                    if (res.length === 0) {
                         console.log(`Sorry, insufficient quantity`);
                         start();
-
                     }
+                    {
+                        console.log(`Total Amount Due: $${selectedQuantity*res[0].price}`);
 
-                    // {
-                    //  console.log(`selectedId.price * selectedQuantity);
-                    // }
-
-                    // FUNCTION 
-                    //TO UPDATE DB: ITEM QUANTITY
-                    //LOG: CUSTOMER TOTAL
+                        'UPDATE products SET stock_quantity-selectedQuantity WHERE item_id=? ', selectedId, 
+                        function(error, response){
+                            if (error) throw error;
+                        }
+                       productDisplay();
+                    }
                 });
         });
 }

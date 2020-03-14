@@ -33,20 +33,24 @@ function menu() {
         ])
         .then(function (answer) {
 
-            var menuSelection = answer.menu.choices[i];
+            var menuSelection = answer.menu
 
-            switch (i) {
-                case '0':
+            switch (menuSelection) {
+                case 'View Products for Sale':
                     readProducts();
+                    connection.end();
                     break;
-                case '1':
+                case 'View Low Inventory':
                     lowInventory();
+                    connection.end();
                     break;
-                case '2':
+                case 'Add to Inventory':
 
+                    connection.end();
                     break;
-                case '3':
+                case 'Add New Product':
 
+                    connection.end();
                     break;
             }
         })
@@ -62,14 +66,15 @@ function menu() {
 // ---------------------------------------------------------
 // stores ALL data from products table
 var productsTable = [];
+var query;
 
 function readProducts() {
     // --- connect to DB
     dbConnect();
-    var query = connection.query('SELECT * FROM products', function (error, data) {
+    query = connection.query('SELECT * FROM products', function (error, data) {
         if (error) throw error;
-        
-        for (i=0; i<data.length; i++){
+
+        for (i = 0; i < data.length; i++) {
             productsTable.push(data[i]);
 
             console.log(`Product ID: ${data[i].item_id}  ||  Product Name: ${data[i].product_name}  ||  Price: $${data[i].price}  ||  Quantity: ${data[i].stock_quantity}`);
@@ -77,12 +82,11 @@ function readProducts() {
     });
     // the actual query that is run
     console.log(query.sql);
-    connection.end();
 }
 
-function lowInventory (){
+function lowInventory() {
     dbConnect();
-    var query = connection.query('SELECT * FROM products WHERE stock_quantity<5', function(error, data){
+    query = connection.query('SELECT * FROM products WHERE stock_quantity<5', function (error, data) {
         if (error) throw error;
 
         for (i = 0; i < data.length; i++) {
@@ -90,6 +94,31 @@ function lowInventory (){
             console.log(`Product ID: ${data[i].item_id}  ||  Product Name: ${data[i].product_name}  ||  Price: $${data[i].price}  ||  Quantity: ${data[i].stock_quantity}  ||  Department: ${data[i].department_name}`);
         }
     });
-    connection.end();
 }
 
+function addStock() {
+    dbConnect;
+    query = connection.query('SELECT * FROM products', function (error, data) {
+        if (error) throw error;
+
+
+        inquirer
+            .prompt([
+                {
+                    name: 'itemId',
+                    type: 'list',
+                    message: 'Add stock quantity to: ',
+                    choices: function () {
+                        var choicesArray = [];
+
+                        for (let i = 0; i < data.length; i++) {
+                            choicesArray.push(data[i].product_name)
+                        }
+                        return choicesArray;
+                        console.log(`we got this far yay`);
+                    }
+                }
+            ])
+    })
+}
+addStock();

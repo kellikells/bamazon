@@ -12,14 +12,12 @@ const connection = mysql.createConnection({
     database: 'bamazonDB'
 });
 
-connection.connect((err) => {
-    if (err) throw err;
-
-    console.log('Connected as thread ID: ' + connection.threadId);
-    productDisplay();
-});
-
-
+var dbConnect = function () {
+    connection.connect((err) => {
+        if (err) throw err;
+        console.log('Connected as thread ID: ' + connection.threadId);
+    });
+}
 
 // ============= FUNCTION: prompt menu options ============
 // ---------------------------------------------------------
@@ -61,9 +59,29 @@ function menu() {
         });
 }
 
-
-// ---------------------------------------------(------------
+// ---------------------------------------------------------
+// stores ALL data from products table
 var productsTable = [];
 
-var query = connection.query('SELECT * FROM products');
-console.log(query.sql);
+function readProducts() {
+    // --- connect to DB
+    dbConnect();
+    var query = connection.query('SELECT * FROM products', function (error, data) {
+        if (error) throw error;
+        
+        for (i=0; i<data.length; i++){
+            productsTable.push(data[i]);
+
+            console.log(`Product ID: ${data[i].item_id}  ||  Product Name: ${data[i].product_name}  ||  Price: $${data[i].price}  ||  Quantity: ${data[i].stock_quantity}`);
+        }
+    });
+    // the actual query that is run
+    console.log(query.sql);
+    connection.end();
+}
+
+
+function lowInventory (){
+    dbConnect();
+    var query = connection.query('')
+}

@@ -74,7 +74,7 @@ function start() {
             if (answer.quantity > userChoice.stock_quantity) {
                 console.log('\r\n');
                 console.log(`Sorry, we don't have that many.  Let's start over`);
-                console.log('\r\n\r\n');
+                console.log('\r\n');
 
                 productDisplay();
             }

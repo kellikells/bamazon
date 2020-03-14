@@ -35,10 +35,11 @@ function productDisplay() {
         // --- loop through response & logs desired 
         for (let i = 0; i < res.length; i++) {
             console.log(`ID: ${res[i].item_id}  || Product Name: ${res[i].product_name}  || Price: $ ${res[i].price}`);
+         
             productsTable.push(res[i]);
         }
-        console.log(productsTable);
-        console.log(typeof productsTable); // returns object 
+        // console.log(productsTable);
+        // console.log(typeof productsTable); // returns object 
 
         start();
     });
@@ -71,17 +72,22 @@ function start() {
                 }
             }
             if (answer.quantity > userChoice.stock_quantity) {
+                console.log('\r\n');
                 console.log(`Sorry, we don't have that many.  Let's start over`);
+                console.log('\r\n\r\n');
+
                 productDisplay();
             }
             else {
+                console.log('\r\n');
                 console.log(`CONGRATULATIONS ON YOUR PURCHASE!!! Amount Due: $${(answer.quantity * userChoice.price).toFixed(2)}`);
+                console.log('\r\n');
 
                 // --- saves new stock_quantity for DB update
                 // --- updates productsTable array 
                 var stock_updated = userChoice.stock_quantity -= answer.quantity;
 
-                console.log(`UPDATED ARRAY ${productsTable}`);
+                // console.log(`UPDATED ARRAY ${productsTable}`);
 
                 connection.query('UPDATE products SET ? WHERE ?',
                     [

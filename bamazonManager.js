@@ -37,10 +37,10 @@ function menu() {
 
             switch (i) {
                 case '0':
-
+                    readProducts();
                     break;
                 case '1':
-
+                    lowInventory();
                     break;
                 case '2':
 
@@ -80,8 +80,16 @@ function readProducts() {
     connection.end();
 }
 
-
 function lowInventory (){
     dbConnect();
-    var query = connection.query('')
+    var query = connection.query('SELECT * FROM products WHERE stock_quantity<5', function(error, data){
+        if (error) throw error;
+
+        for (i = 0; i < data.length; i++) {
+
+            console.log(`Product ID: ${data[i].item_id}  ||  Product Name: ${data[i].product_name}  ||  Price: $${data[i].price}  ||  Quantity: ${data[i].stock_quantity}  ||  Department: ${data[i].department_name}`);
+        }
+    });
+    connection.end();
 }
+

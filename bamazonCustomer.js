@@ -32,7 +32,7 @@ function productDisplay() {
 
         // --- loop through response & logs specific data
         for (let i = 0; i < res.length; i++) {
-            console.log(`ID: ${res[i].item_id} | product name: ${res[i].product_name} | price: $ ${res[i].price}`); 
+            console.log(`ID: ${res[i].item_id} | product name: ${res[i].product_name} | price: $ ${res[i].price}`);
         }
         start();
     });
@@ -72,13 +72,12 @@ function start() {
                         start();
                     }
                     {
-                        console.log(`Total Amount Due: $${selectedQuantity*res[0].price}`);
-
-                        'UPDATE products SET stock_quantity-selectedQuantity WHERE item_id=? ', selectedId, 
-                        function(error, response){
-                            if (error) throw error;
-                        }
-                       productDisplay();
+                        'UPDATE products SET stock_quantity-selectedQuantity WHERE item_id=? ', selectedId,
+                            function (error) {
+                                if (error) throw error;
+                                console.log(`Total Amount Due: $${selectedQuantity * res[0].price}`);
+                            }
+                        productDisplay();
                     }
                 });
         });

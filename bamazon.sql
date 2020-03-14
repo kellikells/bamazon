@@ -35,6 +35,8 @@ VALUES ("Betrayal At House On The Hill", "cooperative games", 39.49, 3),
 -- statements dependent on customer/user input
 SELECT * FROM products;
 
+SELECT FORMAT(price, 2) FROM products;
+
 SELECT price FROM products WHERE item_id=? AND stock_quantity> ?;
 
 UPDATE products SET stock_quantity=? WHERE item_id=?;

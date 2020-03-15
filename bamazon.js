@@ -13,8 +13,8 @@ const connection = mysql.createConnection({
     database: 'bamazonDB'
 });
 
-// =================== CONNECTING TO DB =====================
-//         also tells what to do when connected
+// ==================== CONNECTING TO DB =====================
+//          also tells what to do when connected
 // ------------------------------------------------------------
 connection.connect((err) => {
     if (err) throw err;
@@ -38,7 +38,7 @@ function productDisplay() {
          
             productsTable.push(res[i]);
         }
-        // console.log(productsTable);
+        // console.log(productsTable[0]);
         // console.log(typeof productsTable); // returns object 
 
         start();

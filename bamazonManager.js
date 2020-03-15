@@ -45,7 +45,7 @@ function menu() {
                     connection.end();
                     break;
                 case 'Add to Inventory':
-
+                    addStock();
                     connection.end();
                     break;
                 case 'Add New Product':
@@ -101,24 +101,68 @@ function addStock() {
     query = connection.query('SELECT * FROM products', function (error, data) {
         if (error) throw error;
 
+        var choicesArray = [];
 
+        // CLI needs user input in order to proceed
         inquirer
             .prompt([
                 {
                     name: 'itemId',
-                    type: 'list',
+                    type: 'rawlist',
                     message: 'Add stock quantity to: ',
                     choices: function () {
-                        var choicesArray = [];
+                        // var choicesArray = [];
 
                         for (let i = 0; i < data.length; i++) {
                             choicesArray.push(data[i].product_name)
                         }
                         return choicesArray;
-                        console.log(`we got this far yay`);
                     }
+                },
+                {
+                    name: 'addQuantity',
+                    type: 'number',
+                    message: 'Quantity: '
                 }
             ])
+            .then(function (answer) {
+                var chosenItem;
+                for (let i = 0; i < choicesArray.length; i++) {
+                    if (answer.itemId === choicesArray[i]) {
+                        chosenItem = choicesArray[i];
+                    }
+                }
+
+                // var initialQuantity;
+                getQuantity();
+
+                // connection.query('UPDATE products SET ? WHERE ?',
+                //     [
+                //         {
+                //             stock_quantity: initialQuantity += answer.addQuantity
+                //         },
+                //         {
+                //             product_name: chosenItem
+
+                //         }], function (err) {
+                //             if (err) throw err;
+                //         }
+                // )
+            })
     })
 }
+
+function getQuantity() {
+    ('SELECT stock_quantity FROM products WHERE product_name ?', chosenItem, function (errors, results) {
+        if (errors) throw errors;
+        initialQuantity = results.stock_quantity
+    });
+};
+
 addStock();
+// function newItem() {
+//     inquirer
+//     .prompt([
+//         []
+//     ])
+// }

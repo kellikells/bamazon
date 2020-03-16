@@ -1,6 +1,5 @@
-var inquirer = require('inquirer');
-var mysql = require('mysql');
-
+const inquirer = require('inquirer');
+const mysql = require('mysql');
 
 // ============= CONNECTION TO MYSQL DB ===================
 // ---------------------------------------------------------
@@ -12,7 +11,7 @@ const connection = mysql.createConnection({
     database: 'bamazonDB'
 });
 
-var dbConnect = function () {
+const dbConnect = function () {
     connection.connect((err) => {
         if (err) throw err;
         console.log('Connected as thread ID: ' + connection.threadId);
@@ -21,7 +20,19 @@ var dbConnect = function () {
 
 // ============= FUNCTION: prompt menu options ============
 // ---------------------------------------------------------
+var productsTable = [];
+var query;
+
 function menu() {
+    dbConnect();
+    query = connection.query('SELECT * FROM products', function (error, data) {
+        if (error) throw e
+        for (i = 0; i < data.length; i++) {
+            productsTable.push(data[i]);
+        }
+    });
+    // the actual query that is run
+    console.log(query.sql);
     inquirer
         .prompt([
             {
@@ -32,7 +43,6 @@ function menu() {
             }
         ])
         .then(function (answer) {
-
             var menuSelection = answer.menu
 
             switch (menuSelection) {
@@ -44,14 +54,14 @@ function menu() {
                     lowInventory();
                     connection.end();
                     break;
-                case 'Add to Inventory':
-                    addStock();
-                    connection.end();
-                    break;
-                case 'Add New Product':
+                // case 'Add to Inventory':
+                //     addStock();
+                //     connection.end();
+                //     break;
+                // case 'Add New Product':
 
-                    connection.end();
-                    break;
+                //     connection.end();
+                //     break;
             }
         })
         .catch(function (error) {
@@ -64,24 +74,12 @@ function menu() {
 }
 
 // ---------------------------------------------------------
-// stores ALL data from products table
-var productsTable = [];
-var query;
-
 function readProducts() {
-    // --- connect to DB
-    dbConnect();
-    query = connection.query('SELECT * FROM products', function (error, data) {
-        if (error) throw error;
+    menu();
+    for (i = 0; i < productsTable.length; i++) {
 
-        for (i = 0; i < data.length; i++) {
-            productsTable.push(data[i]);
-
-            console.log(`Product ID: ${data[i].item_id}  ||  Product Name: ${data[i].product_name}  ||  Price: $${data[i].price}  ||  Quantity: ${data[i].stock_quantity}`);
-        }
-    });
-    // the actual query that is run
-    console.log(query.sql);
+        console.log(`Product ID: ${productsTable[i].item_id}  ||  Product Name: ${productsTable[i].product_name}  ||  Price: $${productsTable[i].price}  ||  Quantity: ${productsTable[i].stock_quantity}`);
+    }
 }
 
 function lowInventory() {
@@ -97,57 +95,58 @@ function lowInventory() {
 }
 
 function addStock() {
+    readProducts();
     var choicesArray = [];
     var chosenItem;
-    
-    dbConnect;
-    query = connection.query('SELECT * FROM products', function (error, data) {
-        if (error) throw error;
 
-        // CLI needs user input in order to proceed
-        inquirer.prompt([{
-            name: 'itemId',
-            type: 'rawlist',
-            message: 'Add stock quantity to: ',
-            choices: function () {
-                for (let i = 0; i < data.length; i++) {
-                    choicesArray.push(data[i].product_name)
-                }
-                return choicesArray;
+    // dbConnect;
+    // query = connection.query('SELECT * FROM products', function (error, data) {
+    if (error) throw error;
+
+    // CLI needs user input in order to proceed
+    inquirer.prompt([{
+        name: 'itemId',
+        type: 'rawlist',
+        message: 'Add stock quantity to: ',
+        choices: function () {
+            for (let i = 0; i < data.length; i++) {
+                choicesArray.push(data[i].product_name)
             }
-        },
-        {
-            name: 'addQuantity',
-            type: 'number',
-            message: 'Quantity: '
-        }])
-            .then(function (answer) {
-                for (var i = 0; i < choicesArray.length; i++) {
-                    if (answer.itemId === choicesArray[i]) {
-                        chosenItem = choicesArray[i];
+            return choicesArray;
+        }
+    },
+    {
+        name: 'addQuantity',
+        type: 'number',
+        message: 'Quantity: '
+    }])
+        .then(function (answer) {
+            for (var i = 0; i < choicesArray.length; i++) {
+                if (answer.itemId === choicesArray[i]) {
+                    chosenItem = choicesArray[i];
 
-                        // this saves the index of the chosen item!
-                        var index = i;
-                    }
+                    // this saves the index of the chosen item!
+                    var index = i;
                 }
+            }
 
-                // var initialQuantity;
-                getQuantity();
+            // var initialQuantity;
+            getQuantity();
 
-                // connection.query('UPDATE products SET ? WHERE ?',
-                //     [
-                //         {
-                //             stock_quantity: initialQuantity += answer.addQuantity
-                //         },
-                //         {
-                //             product_name: chosenItem
+            // connection.query('UPDATE products SET ? WHERE ?',
+            //     [
+            //         {
+            //             stock_quantity: initialQuantity += answer.addQuantity
+            //         },
+            //         {
+            //             product_name: chosenItem
 
-                //         }], function (err) {
-                //             if (err) throw err;
-                //         }
-                // )
-            })
-    })
+            //         }], function (err) {
+            //             if (err) throw err;
+            //         }
+            // )
+        })
+
     console.log(query.sql)
 }
 
@@ -158,7 +157,7 @@ function getQuantity() {
     });
 };
 
-addStock();
+menu();
 // function newItem() {
 //     inquirer
 //     .prompt([

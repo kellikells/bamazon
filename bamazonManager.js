@@ -97,39 +97,37 @@ function lowInventory() {
 }
 
 function addStock() {
+    var choicesArray = [];
+    var chosenItem;
+    
     dbConnect;
     query = connection.query('SELECT * FROM products', function (error, data) {
         if (error) throw error;
 
-        var choicesArray = [];
-
         // CLI needs user input in order to proceed
-        inquirer
-            .prompt([
-                {
-                    name: 'itemId',
-                    type: 'rawlist',
-                    message: 'Add stock quantity to: ',
-                    choices: function () {
-                        // var choicesArray = [];
-
-                        for (let i = 0; i < data.length; i++) {
-                            choicesArray.push(data[i].product_name)
-                        }
-                        return choicesArray;
-                    }
-                },
-                {
-                    name: 'addQuantity',
-                    type: 'number',
-                    message: 'Quantity: '
+        inquirer.prompt([{
+            name: 'itemId',
+            type: 'rawlist',
+            message: 'Add stock quantity to: ',
+            choices: function () {
+                for (let i = 0; i < data.length; i++) {
+                    choicesArray.push(data[i].product_name)
                 }
-            ])
+                return choicesArray;
+            }
+        },
+        {
+            name: 'addQuantity',
+            type: 'number',
+            message: 'Quantity: '
+        }])
             .then(function (answer) {
-                var chosenItem;
-                for (let i = 0; i < choicesArray.length; i++) {
+                for (var i = 0; i < choicesArray.length; i++) {
                     if (answer.itemId === choicesArray[i]) {
                         chosenItem = choicesArray[i];
+
+                        // this saves the index of the chosen item!
+                        var index = i;
                     }
                 }
 
@@ -150,6 +148,7 @@ function addStock() {
                 // )
             })
     })
+    console.log(query.sql)
 }
 
 function getQuantity() {

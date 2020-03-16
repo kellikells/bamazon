@@ -23,44 +23,51 @@ connection.connect((err) => {
     console.log('Connected as thread ID: ' + connection.threadId);
     productDisplay();
 });
-
 // =============== QUERY: ALL DATA from table ================
 //  Array to store ALL data in the table, from initial connection.query (saves time by not having to connect with DB until updating/deleting etc)
 var productsTable = [];
 // -----------------------------------------------------------
 function productDisplay() {
-    connection.query('SELECT * FROM products ORDER BY department_name', (err, res) => {
+    connection.query('SELECT * FROM products', (err, res) => {
         if (err) throw err;
 
-        // --- loop through response & logs desired 
         for (let i = 0; i < res.length; i++) {
-            console.log(`ID: ${res[i].item_id}  || Product Name: ${res[i].product_name}  || Price: $ ${res[i].price}`);
-         
+            console.log(`ID: ${res[i].item_id}   || Product Name: ${res[i].product_name}  || Price: $ ${res[i].price} \n`);
             productsTable.push(res[i]);
         }
-        // console.log(productsTable[0]);
-        // console.log(typeof productsTable); // returns object 
-
         start();
+        // console.log(productsTable[0]);
+        // console.log(`-------------------------`);
+        // console.log(res);
     });
 }
-
 // ========================= Prompt ===========================
 // ------------------------------------------------------------
 function start() {
-    inquirer
-        .prompt([
-            {
-                name: 'itemId',
-                type: 'number',
-                message: 'Enter the product ID (number) you want to buy: '
-            },
-            {
-                name: 'quantity',
-                type: 'number',
-                message: 'How many units (number): '
+    inquirer.prompt([{
+        name: 'itemId',
+        type: 'number',
+        message: 'Enter the product ID (number) you want to buy: ',
+        validate: function (value) {
+            if (isNaN(value) === false) {
+                return true;
+            } else {
+                return false;
             }
-        ])
+        }
+    },
+    {
+        name: 'quantity',
+        type: 'number',
+        message: 'How many units (number): ',
+        validate: function (value) {
+            if (isNaN(value) === false) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }])
         .then(function (answer) {
 
             // --- all the data for the item the user selects, stored as an object
@@ -90,14 +97,12 @@ function start() {
                 // console.log(`UPDATED ARRAY ${productsTable}`);
 
                 connection.query('UPDATE products SET ? WHERE ?',
-                    [
-                        {
-                            stock_quantity: stock_updated
-                        },
-                        {
-                            item_id: userChoice.item_id
-                        }
-                    ],
+                    [{
+                        stock_quantity: stock_updated
+                    },
+                    {
+                        item_id: userChoice.item_id
+                    }],
                     function (error) {
                         if (error) throw error;
                     });

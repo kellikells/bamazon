@@ -20,15 +20,13 @@ const dbConnect = function () {
         console.log('\n');
         console.log('Connected as thread ID: ' + connection.threadId);
     });
-
     getData();
-    // the actual query that is run
-    // console.log(query.sql);
-    // connection.end();
     menu();
+    // connection.end();
 }
 dbConnect();
 
+// ========= STORES THE DATA IN GLOBAL ARRAY =============
 function getData() {
     // empty out array 
     productsTable.splice(0, productsTable.length);
@@ -49,11 +47,12 @@ function menu() {
             {
                 name: 'menu',
                 type: 'list',
-                message: 'Menu: Options',
+                message: 'Menu Options',
                 choices: ['View Products for Sale', 'View Low Inventory', 'Add to Inventory', 'Add New Product']
             }
         ])
         .then(function (answer) {
+            console.log('--------------------------------');
             var menuSelection = answer.menu
 
             // ======= SWITCH STATEMENT: MENU OPTIONS =======
@@ -67,10 +66,9 @@ function menu() {
                 case 'Add to Inventory':
                     addStock();
                     break;
-                // case 'Add New Product':
-
-                //     connection.end();
-                //     break;
+                case 'Add New Product':
+                    newItem();
+                    break;
             }
         })
         .catch(function (error) {
@@ -109,7 +107,7 @@ function lowInventory() {
 }
 
 function addStock() {
-    readProducts();
+    // readProducts();
     var choicesArray = [];
     var chosenItem;
 
@@ -156,14 +154,51 @@ function addStock() {
                 }
             )
             getData();
+            menu();
         });
-        menu();
 }
 
 
-// function newItem() {
-//     inquirer
-//     .prompt([
-//         []
-//     ])
-// }
+function newItem() {
+    inquirer
+        .prompt([{
+            name: 'name',
+            type: 'input',
+            message: 'Product Name: '
+        },
+        {
+            name: 'department',
+            type: 'list',
+            message: 'Select the Department for this Product: ',
+            choices: ['cooperative games', 'card games', 'board games', 'party games', 'puzzles']
+        },
+        {
+            name: 'price',
+            type: 'number',
+            message: 'Enter the price for this produc/t'
+        },
+        {
+            name: 'stock',
+            type: 'number',
+            message: 'Enter the quantity in stock: '
+        }])
+        .then(function (answer) {
+            connection.query('INSERT INTO products SET ?',
+                {
+                    product_name: answer.name,
+                    department_name: answer.department,
+                    price: answer.price,
+                    stock_quantity: answer.stock
+                },
+                (err, res) => {
+                    if (err) throw err;
+                    console.log(`${res.affectedRows}  product added!\n`);
+                });
+
+            // --- store the updated table data in the productsTable array
+            getData();
+
+            menu();
+        });
+
+}

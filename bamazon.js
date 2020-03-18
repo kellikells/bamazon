@@ -28,6 +28,8 @@ connection.connect((err) => {
 var productsTable = [];
 // -----------------------------------------------------------
 function productDisplay() {
+      // empty out array 
+    productsTable.splice(0, productsTable.length);
     connection.query('SELECT * FROM products', (err, res) => {
         if (err) throw err;
 

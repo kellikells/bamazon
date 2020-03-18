@@ -1,6 +1,7 @@
 // --- requiring packages
 const inquirer = require('inquirer');
 const mysql = require('mysql');
+const cTable= require('console.table');
 
 // ========= Sets up the ability to connect to DB ==========
 //     put into our client(node), how to connect to DB

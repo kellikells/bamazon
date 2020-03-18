@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql');
+const cTable = require('console.table');
 
 var productsTable = [];
 var query;
@@ -175,7 +176,7 @@ function newItem() {
         {
             name: 'price',
             type: 'number',
-            message: 'Enter the price for this produc/t'
+            message: 'Enter the price for this product'
         },
         {
             name: 'stock',

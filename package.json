@@ -18,9 +18,10 @@
   },
   "homepage": "https://github.com/kellikells/bamazon#readme",
   "dependencies": {
+    "console.table": "^0.10.0",
     "inquirer": "^7.0.6",
     "mysql": "^2.18.1",
-    "sql-formatter": "^2.3.3",
-    "require-stack": "^1.0.2"
+    "require-stack": "^1.0.2",
+    "sql-formatter": "^2.3.3"
   }
 }
